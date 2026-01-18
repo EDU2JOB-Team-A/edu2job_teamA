@@ -23,15 +23,15 @@ class CareerPredictor:
         # Validation
         val_df = self.df.copy()
         # Normalize headers to be case insensitive potentially, or just enforce strict
-        if 'Skills' not in val_df.columns or 'Job_Role' not in val_df.columns:
-            raise ValueError("CSV must contain 'Skills' and 'Job_Role' columns")
+        if 'skills' not in val_df.columns or 'job_role' not in val_df.columns:
+            raise ValueError("CSV must contain 'skills' and 'job_role' columns")
             
         # Preprocess: Skills are comma separated in 'Skills' column
         # Handle NaN
-        val_df = val_df.dropna(subset=['Skills', 'Job_Role'])
+        val_df = val_df.dropna(subset=['skills', 'job_role'])
         
-        X_raw = [str(skills).split(',') for skills in val_df['Skills']]
-        y = val_df['Job_Role']
+        X_raw = [str(skills).split(',') for skills in val_df['skills']]
+        y = val_df['job_role']
 
         # Determine all possible skills from dataset
         self.mlb.fit(X_raw)
@@ -84,9 +84,9 @@ class CareerPredictor:
                 # This is a bit naive for ML but works for simple feedback
                 
                 # Get all skills associated with this role in dataset
-                role_rows = self.df[self.df['Job_Role'] == role]
+                role_rows = self.df[self.df['job_role'] == role]
                 all_role_skills = set()
-                for skills_str in role_rows['Skills']:
+                for skills_str in role_rows['skills']:
                     all_role_skills.update(skills_str.split(','))
                 
                 missing = list(all_role_skills - set(user_skills_clean))

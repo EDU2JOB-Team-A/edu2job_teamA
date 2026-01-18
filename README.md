@@ -29,12 +29,12 @@
 - **Dashboard**: Personalized insights and recommended roles.
 
 ### 5. Admin Capabilities
-- **Admin Dashboard**: Manage users and system stats.
+- **Admin Dashboard (New)**: Redesigned with a modern horizontal sliding layout and sidebar navigation.
 - **Data Visualization**: Charts and analytics for user demographics and system usage.
 - **User Management**: Promote/demote users, delete accounts.
 
 ### 6. Technical Stack
-- **Backend**: Django, Django REST Framework, MySQL (Cloud), Scikit-learn (ML), Pandas.
+- **Backend**: Django, Django REST Framework, MySQL (Aiven Cloud), Scikit-learn (ML), Pandas.
 - **Frontend**: React (Vite), Tailwind CSS, Framer Motion (Animations), Axios.
 - **Integration**: n8n (Workflow Automation).
 
