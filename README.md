@@ -79,10 +79,16 @@ Default credentials:
 ---
 
 ## 🤝 Collaboration Workflow (Team A)
-1.  **Pull Latest**: `git pull origin main`
-2.  **Create Branch**: `git checkout -b feature-your-name`
+
+We follow a strict **Feature Branch Workflow**.
+Please read the detailed [Collaboration Guide](COLLABORATION.md) before contributing.
+
+**Quick Summary:**
+1.  **Pull Latest**: `git pull origin master`
+2.  **Create Branch**: `git checkout -b feature/your-name`
 3.  **Commit**: `git commit -m "feat: added login"`
-4.  **Push**: `git push origin feature-your-name`
+4.  **Push**: `git push origin feature/your-name`
+5.  **Pull Request**: Open a PR on GitHub for review.
 
 ---
 &copy; 2026 Edu2Job Team A
