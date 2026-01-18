@@ -20,9 +20,18 @@ class CareerPredictor:
 
         self.df = pd.read_csv(csv_path)
         
+        # Validation
+        val_df = self.df.copy()
+        # Normalize headers to be case insensitive potentially, or just enforce strict
+        if 'Skills' not in val_df.columns or 'Job_Role' not in val_df.columns:
+            raise ValueError("CSV must contain 'Skills' and 'Job_Role' columns")
+            
         # Preprocess: Skills are comma separated in 'Skills' column
-        X_raw = [skills.split(',') for skills in self.df['Skills']]
-        y = self.df['Job_Role']
+        # Handle NaN
+        val_df = val_df.dropna(subset=['Skills', 'Job_Role'])
+        
+        X_raw = [str(skills).split(',') for skills in val_df['Skills']]
+        y = val_df['Job_Role']
 
         # Determine all possible skills from dataset
         self.mlb.fit(X_raw)

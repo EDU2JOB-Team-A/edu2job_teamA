@@ -9,6 +9,8 @@ class User(AbstractUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user')
     profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
     banner_image = models.ImageField(upload_to='banners/', blank=True, null=True)
+    is_flagged = models.BooleanField(default=False)
+
 
 class Education(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='education')
@@ -60,6 +62,37 @@ class CareerPrediction(models.Model):
     missing_skills = models.TextField(blank=True) # Comma-separated
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_flagged = models.BooleanField(default=False)
+
 
     def __str__(self):
         return f"{self.user.username} - {self.predicted_role}"
+
+class Feedback(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='feedback')
+    message = models.TextField()
+    rating = models.IntegerField(default=5) # 1-5 stars
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Feedback from {self.user.username}"
+
+class SupportTicket(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tickets')
+    subject = models.CharField(max_length=255)
+    is_resolved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Ticket #{self.id} - {self.subject}"
+
+class TicketMessage(models.Model):
+    ticket = models.ForeignKey(SupportTicket, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    is_admin_reply = models.BooleanField(default=False) # Helper to distinguish UI styling easily
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Message in #{self.ticket.id} by {self.sender.username}"

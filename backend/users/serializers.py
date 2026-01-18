@@ -1,12 +1,16 @@
 from rest_framework import serializers
-from .models import User, Education, JobHistory, Skill, Certification
+from .models import User, Education, JobHistory, Skill, Certification, Feedback
 from django.contrib.auth.hashers import make_password
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'role', 'first_name', 'last_name', 'profile_photo', 'banner_image')
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name', 'role', 'profile_photo', 'banner_image', 'is_flagged', 'date_joined')
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'role': {'read_only': True}, # Role change strictly via admin endpoint
+            'is_flagged': {'read_only': True} # Changed via admin action
+        }
 
     def create(self, validated_data):
         validated_data['password'] = make_password(validated_data['password'])
@@ -16,6 +20,28 @@ class UserSerializer(serializers.ModelSerializer):
         if 'password' in validated_data:
             validated_data['password'] = make_password(validated_data['password'])
         return super(UserSerializer, self).update(instance, validated_data)
+
+class DetailedUserSerializer(UserSerializer):
+    education = serializers.SerializerMethodField()
+    job_history = serializers.SerializerMethodField()
+    skills = serializers.SerializerMethodField()
+    certifications = serializers.SerializerMethodField()
+
+    class Meta(UserSerializer.Meta):
+        fields = UserSerializer.Meta.fields + ('education', 'job_history', 'skills', 'certifications')
+
+    def get_education(self, obj):
+        return EducationSerializer(obj.education.all(), many=True).data
+
+    def get_job_history(self, obj):
+        return JobHistorySerializer(obj.job_history.all(), many=True).data
+
+    def get_skills(self, obj):
+        return SkillSerializer(obj.skills.all(), many=True).data
+    
+    def get_certifications(self, obj):
+        return CertificationSerializer(obj.certifications.all(), many=True).data
+
 
 class EducationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,8 +64,14 @@ class SkillSerializer(serializers.ModelSerializer):
 class CertificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Certification
-        fields = '__all__'
-        read_only_fields = ('user',)
+        fields = ['id', 'name', 'issuing_organization', 'issue_date', 'expiration_date', 'credential_id', 'credential_url']
+        read_only_fields = ['user']
+
+class FeedbackSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField(read_only=True)
+    class Meta:
+        model = Feedback
+        fields = ['id', 'user', 'message', 'rating', 'created_at']
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
@@ -91,3 +123,26 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['last_name'] = user.last_name
 
         return token
+
+from .models import SupportTicket, TicketMessage
+
+class TicketMessageSerializer(serializers.ModelSerializer):
+    sender = serializers.StringRelatedField(read_only=True)
+    sender_role = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = TicketMessage
+        fields = ['id', 'sender', 'sender_role', 'message', 'is_admin_reply', 'created_at']
+        
+    def get_sender_role(self, obj):
+        return obj.sender.role
+
+class SupportTicketSerializer(serializers.ModelSerializer):
+    user_username = serializers.ReadOnlyField(source='user.username')
+    user_email = serializers.ReadOnlyField(source='user.email')
+    messages = TicketMessageSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = SupportTicket
+        fields = ['id', 'user', 'user_username', 'user_email', 'subject', 'is_resolved', 'created_at', 'updated_at', 'messages']
+        read_only_fields = ['user', 'messages']

@@ -1,22 +1,16 @@
-Skills,Job_Role
-"Python,Django,SQL",Backend Developer
-"React,JavaScript,HTML,CSS",Frontend Developer
-"Python,Pandas,Scikit-Learn,SQL",Data Scientist
-"Java,Spring,SQL,Microservices",Backend Developer
-"JavaScript,Node.js,MongoDB,React",Full Stack Developer
-"AWS,Docker,Kubernetes,Linux",DevOps Engineer
-"Figma,UI/UX,Prototyping",UI/UX Designer
-"Python,TensorFlow,Deep Learning",AI Engineer
-"C++,Data Structures,Algorithms",Software Engineer
-"Swift,iOS,Objective-C",Mobile App Developer
-"Kotlin,Android,Java",Mobile App Developer
-"SQL,Tableau,Excel",Data Analyst
-"Html,Css,Javascript",Web Developer
-"Python,Flask,SQL",Backend Developer
-"React,Redux,JavaScript",Frontend Developer
-"Java,Hibernate,JPA",Software Engineer
-"C#,DotNet,SQL",Software Developer
-"Angular,TypeScript,HTML,CSS",Frontend Developer
-"Vue,JavaScript,HTML,CSS",Frontend Developer
-"PHP,Laravel,MySQL",Backend Developer
-"Ruby,Rails,PostgreSQL",Backend Developer
+degree,specialization,course,college,year_of_completion,cgpa,skills,certifications,job_role
+B.Tech,Computer Science,Computer Science,IIT Delhi,2023,8.8,"Python,SQL,Django,REST APIs",AWS,Backend Developer
+B.Tech,Computer Science,Computer Science,NIT Trichy,2022,8.4,"Java,Spring Boot,SQL",Oracle,Backend Developer
+B.Tech,Computer Science,Computer Science,DTU Delhi,2023,8.1,"HTML,CSS,JavaScript,React",None,Frontend Developer
+B.Tech,Computer Science,Computer Science,Chandigarh University,2024,7.9,"HTML,CSS,JavaScript,React,Node.js,SQL",MongoDB,Full Stack Developer
+B.Tech,Data Science,Data Science,IIT Bombay,2023,9.0,"Python,Machine Learning,Statistics,SQL",Coursera ML,Data Scientist
+B.Tech,Artificial Intelligence,AI,IIT Hyderabad,2024,8.7,"Python,Deep Learning,TensorFlow,Keras",Coursera AI,Machine Learning Engineer
+B.Tech,Cyber Security,Cyber Security,SRM University,2023,8.2,"Networking,Linux,SIEM,Python",CEH,Cyber Security Analyst
+MBA,Business Administration,Management,IIM Ahmedabad,2022,8.5,"Excel,SQL,Power BI,Analytics",Business Analytics,Business Analyst
+B.Tech,Information Technology,IT,VIT Vellore,2021,7.6,"Python,Django,SQL",Django Cert,Backend Developer
+B.Tech,Computer Science,Computer Science,NIT Surathkal,2024,8.9,"Python,DSA,Algorithms",None,Software Engineer
+B.Tech,Computer Science,Computer Science,IIT Madras,2023,9.1,"Python,ML,Deep Learning,SQL",AWS ML,AI Engineer
+B.Tech,Computer Science,Computer Science,BITS Pilani,2022,8.6,"C++,DSA,System Design",None,Software Engineer
+B.Tech,Computer Science,Computer Science,LPU,2023,7.4,"HTML,CSS,JavaScript",None,Frontend Developer
+B.Tech,Computer Science,Computer Science,Amity University,2024,7.8,"React,Node.js,Express,SQL",MongoDB,Full Stack Developer
+B.Tech,Data Science,Data Science,Manipal University,2022,8.0,"Python,SQL,Power BI,Excel",Microsoft DA,Data Analyst
