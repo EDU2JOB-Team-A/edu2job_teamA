@@ -1,56 +1,88 @@
-# edu2job_teamA
+# Edu2Job API & Frontend
 
-This is the repository for the `edu2job_teamA` project.
+**Edu2Job** is an AI-powered career guidance platform that bridges the gap between education and career success. This repository contains the source code for both the Django backend and React frontend.
 
-## Getting Started
+## 🚀 Features Implemented
 
-To get started with the project, clone the repository to your local machine:
+### 1. Authentication & Security
+- **JWT Authentication**: Secure login and registration using `djangorestframework-simplejwt`.
+- **Role-Based Access Control (RBAC)**: Distinct roles for `User` and `Admin`.
+- **Protected Routes**: Frontend routes (`/dashboard`, `/profile`, `/admin`) are protected and accessible only to authorized users.
 
+### 2. User Dashboard & Profile
+- **Public Landing Page**: Professional "Industry Use" landing page with feature highlights.
+- **User Dashboard**: Personalized dashboard showing user stats and recommended roles.
+- **Profile Management**:
+    - **Education**: Add, view, and delete educational qualifications.
+    - **Job History**: Manage professional work experience.
+
+### 3. Admin Panel
+- **Dedicated Admin Dashboard**: Accessible only to users with `role='admin'`.
+- **User Management**: Admins can view all registered users.
+- **Role Management**: Admins can promote/demote users (User ↔ Admin) and delete accounts.
+
+### 4. Technical Stack
+- **Backend**: Django, Django REST Framework, MySQL (Cloud), Python.
+- **Frontend**: React (Vite), Tailwind CSS, React Router DOM, Axios.
+
+---
+
+## 🛠️ Setup Instructions
+
+### Backend Setup
+1.  Navigate to `backend/`:
+    ```bash
+    cd backend
+    ```
+2.  Create virtual environment:
+    ```bash
+    python -m venv venv
+    .\venv\Scripts\activate  # Windows
+    ```
+3.  Install dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
+4.  Run migrations:
+    ```bash
+    python manage.py migrate
+    ```
+5.  Start server:
+    ```bash
+    python manage.py runserver
+    ```
+
+### Frontend Setup
+1.  Navigate to `frontend/`:
+    ```bash
+    cd frontend
+    ```
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Start development server:
+    ```bash
+    npm run dev
+    ```
+
+### Creating an Admin User
+Run the included script to create an admin user:
 ```bash
-git clone https://github.com/EDU2JOB-Team-A/edu2job_teamA.git
-cd edu2job_teamA
+cd backend
+python create_admin.py
 ```
+Default credentials:
+- **Email**: `admin@gmail.com`
+- **Password**: `admin123`
 
-## Collaboration Workflow
+---
 
-To ensure smooth collaboration among the 5 team members, please follow this workflow:
+## 🤝 Collaboration Workflow (Team A)
+1.  **Pull Latest**: `git pull origin main`
+2.  **Create Branch**: `git checkout -b feature-your-name`
+3.  **Commit**: `git commit -m "feat: added login"`
+4.  **Push**: `git push origin feature-your-name`
 
-1.  **Pull the latest changes:**
-    Always start by pulling the latest changes from the `master` branch to avoid conflicts.
-    ```bash
-    git checkout master
-    git pull origin master
-    ```
-
-2.  **Create a Feature Branch:**
-    Never work directly on the `master` branch. Create a new branch for your specific task or feature. Use a descriptive name (e.g., `feature-login-page`, `bugfix-navbar`).
-    ```bash
-    git checkout -b feature-your-feature-name
-    ```
-
-3.  **Make Changes and Commit:**
-    Work on your feature. Once you are done, stage and commit your changes.
-    ```bash
-    git add .
-    git commit -m "Descriptive message about your changes"
-    ```
-
-4.  **Push Your Branch:**
-    Push your feature branch to the remote repository.
-    ```bash
-    git push -u origin feature-your-feature-name
-    ```
-
-5.  **Merge Changes (or Create a Pull Request):**
-    *If we are using Pull Requests (Recommended):* Go to GitHub and open a Pull Request from your branch to `master`.
-    *If merging locally (be careful):*
-    ```bash
-    git checkout master
-    git pull origin master  # Ensure master is still up to date
-    git merge feature-your-feature-name
-    git push origin master
-    ```
-
-6.  **Resolve Conflicts:**
-    If you encounter merge conflicts, text the group chat or ask for help. Do not force push!
-
+---
+&copy; 2026 Edu2Job Team A
