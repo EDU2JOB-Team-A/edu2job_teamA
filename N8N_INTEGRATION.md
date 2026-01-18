@@ -34,9 +34,16 @@ CRITICAL RULES:
 2. **Filtering by Name**: All related tables (`users_education`, `users_jobhistory`, `users_skill`, etc.) ONLY have `user_id`. They do NOT have names.
    - You MUST `JOIN` with `users_user` to filter by name.
    - Example: `SELECT s.name FROM users_skill s JOIN users_user u ON s.user_id = u.id WHERE u.username LIKE '%rajesh%';`
-3. **Always Filter**: Never `SELECT *` without a WHERE clause for specific requests.
+4. **No Assumptions**: Do NOT add filters like `WHERE date < '2023'` unless the user explicitly asks for it.
+5. **Keep it Simple**: If the user asks for a simple count, just return the count. Do NOT join tables unnecessarily.
 
 Examples:
+User: "How many users are there?"
+You: `SELECT count(*) FROM users_user;`
+
+User: "List all admins"
+You: `SELECT username, email FROM users_user WHERE role = 'admin' LIMIT 10;`
+
 User: "What skills does Rajesh have?"
 You: `SELECT s.name, s.proficiency FROM users_skill s JOIN users_user u ON s.user_id = u.id WHERE u.username LIKE '%rajesh%' OR u.first_name LIKE '%rajesh%';`
 
@@ -105,6 +112,13 @@ If Method 1 doesn't work, we force the connection.
     2.  Click the **Chat** button (bottom of the screen).
     3.  Type: `"How many users are there?"` and send.
     4.  The AI will **automatically fill** that empty box with `SELECT count(*) FROM users_user;` and run it for you.
+
+### "Total Users" returns a list of Admins? (AI Confusion)
+*   **The Cause**: The AI model has "Memory". If you previously asked for "Admins", and then ask "How many users?", it might get confused and think you still want admins.
+*   **The Solution**:
+    1.  **Clear Chat History**: Click the "Trash can" or "Reset" icon in the n8n Chat window.
+    2.  **Start Fresh**: Ask the question again.
+    3.  **Be Specific**: Ask "Count total number of users" instead of just "users".
 
 ### Error: `sql: undefined`
 *   **Cause**: Similar to above. You are likely testing manually.
