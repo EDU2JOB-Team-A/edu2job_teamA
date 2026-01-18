@@ -4,26 +4,39 @@
 
 ## 🚀 Features Implemented
 
-### 1. Authentication & Security
-- **JWT Authentication**: Secure login and registration using `djangorestframework-simplejwt`.
-- **Role-Based Access Control (RBAC)**: Distinct roles for `User` and `Admin`.
-- **Protected Routes**: Frontend routes (`/dashboard`, `/profile`, `/admin`) are protected and accessible only to authorized users.
+### 1. AI & Machine Learning Integration
+- **Career Prediction Engine**: Sophisticated ML model (`backend/ml`) that analyzes user education, skills, and interests to predict suitable job roles with confidence scores.
+- **Prediction History**: Users can track their career prediction trends over time.
+- **N8N AI Agent**: Natural language database querying powered by n8n workflow integration.
 
-### 2. User Dashboard & Profile
-- **Public Landing Page**: Professional "Industry Use" landing page with feature highlights.
-- **User Dashboard**: Personalized dashboard showing user stats and recommended roles.
-- **Profile Management**:
-    - **Education**: Add, view, and delete educational qualifications.
-    - **Job History**: Manage professional work experience.
+### 2. Smart Resume Builder
+- **Dynamic Resume Generation**: Create professional resumes automatically pulling from your profile data.
+- **Customizable Templates**: Choose from multiple professional layouts.
+- **Downloadable Formats**: Export resumes ensuring ATS compatibility.
 
-### 3. Admin Panel
-- **Dedicated Admin Dashboard**: Accessible only to users with `role='admin'`.
-- **User Management**: Admins can view all registered users.
-- **Role Management**: Admins can promote/demote users (User ↔ Admin) and delete accounts.
+### 3. Authentication & Security
+- **JWT Authentication**: Secure login/registration with `djangorestframework-simplejwt`.
+- **Google OAuth**: Seamless sign-in with Google.
+- **Role-Based Access Control (RBAC)**: Distinct permissions for `User` and `Admin`.
+- **Secure Password Management**: Change password functionality with proper validation.
 
-### 4. Technical Stack
-- **Backend**: Django, Django REST Framework, MySQL (Cloud), Python.
-- **Frontend**: React (Vite), Tailwind CSS, React Router DOM, Axios.
+### 4. Comprehensive User Profile
+- **Extended Profile Details**:
+    - **Personal**: Profile picture, banner image, bio.
+    - **Education**: Detailed academic history with CGPA.
+    - **Professional**: Job history and experience.
+    - **Skills & Certifications**: Dedicated sections to showcase expertise.
+- **Dashboard**: Personalized insights and recommended roles.
+
+### 5. Admin Capabilities
+- **Admin Dashboard**: Manage users and system stats.
+- **Data Visualization**: Charts and analytics for user demographics and system usage.
+- **User Management**: Promote/demote users, delete accounts.
+
+### 6. Technical Stack
+- **Backend**: Django, Django REST Framework, MySQL (Cloud), Scikit-learn (ML), Pandas.
+- **Frontend**: React (Vite), Tailwind CSS, Framer Motion (Animations), Axios.
+- **Integration**: n8n (Workflow Automation).
 
 ---
 
