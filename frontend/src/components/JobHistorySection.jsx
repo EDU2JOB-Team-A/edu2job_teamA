@@ -18,7 +18,7 @@ function JobHistorySection() {
 
     const fetchJobs = async () => {
         try {
-            const res = await api.get("/api/job-history/");
+            const res = await api.get("/job-history/");
             setJobs(res.data);
         } catch (error) {
             console.error(error);
@@ -33,7 +33,7 @@ function JobHistorySection() {
         e.preventDefault();
         setLoading(true);
         try {
-            await api.post("/api/job-history/", formData);
+            await api.post("/job-history/", formData);
             fetchJobs();
             setFormData({
                 company: "",
@@ -51,7 +51,7 @@ function JobHistorySection() {
 
     const handleDelete = async (id) => {
         try {
-            await api.delete(`/api/job-history/${id}/`);
+            await api.delete(`/job-history/${id}/`);
             fetchJobs();
         } catch (error) {
             alert("Failed to delete");

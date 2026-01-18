@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from .models import User, Education, JobHistory
+from .models import User, Education, JobHistory, Skill, Certification
 from django.contrib.auth.hashers import make_password
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'role', 'first_name', 'last_name')
+        fields = ('id', 'username', 'email', 'password', 'role', 'first_name', 'last_name', 'profile_photo', 'banner_image')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -28,6 +28,28 @@ class JobHistorySerializer(serializers.ModelSerializer):
         model = JobHistory
         fields = '__all__'
         read_only_fields = ('user',)
+
+class SkillSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Skill
+        fields = '__all__'
+        read_only_fields = ('user',)
+
+class CertificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Certification
+        fields = '__all__'
+        read_only_fields = ('user',)
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    confirm_password = serializers.CharField(required=True)
+
+    def validate(self, data):
+        if data['new_password'] != data['confirm_password']:
+            raise serializers.ValidationError({"new_password": "Passwords do not match."})
+        return data
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 

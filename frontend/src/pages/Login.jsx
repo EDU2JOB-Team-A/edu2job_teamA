@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { jwtDecode } from "jwt-decode";
-import api from "../api";
+import api, { googleLogin } from "../api";
+import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
@@ -85,6 +86,36 @@ function Login() {
                         {loading ? "Signing In..." : "Login"}
                     </button>
                 </form>
+
+                <div className="mt-6">
+                    <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                            <span className="px-2 bg-white text-gray-500">Or continue with</span>
+                        </div>
+                    </div>
+                    <div className="mt-6 flex justify-center">
+                        <GoogleLogin
+                            onSuccess={async (credentialResponse) => {
+                                try {
+                                    setLoading(true);
+                                    const res = await api.googleLogin(credentialResponse.credential);
+                                    const accessToken = res.data.access;
+                                    login(accessToken, res.data.refresh);
+                                    const decoded = jwtDecode(accessToken);
+                                    navigate(decoded.role === "admin" ? "/admin" : "/dashboard");
+                                } catch (err) {
+                                    setError("Google Login Failed");
+                                } finally {
+                                    setLoading(false);
+                                }
+                            }}
+                            onError={() => setError("Google Login Failed")}
+                        />
+                    </div>
+                </div>
 
                 <div className="mt-6 text-center text-sm text-gray-600">
                     Don't have an account?{" "}

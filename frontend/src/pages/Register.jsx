@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
 import api from "../api";
+import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
@@ -139,6 +140,34 @@ function Register() {
                         {loading ? "Creating Account..." : "Register"}
                     </button>
                 </form>
+
+                <div className="mt-6">
+                    <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                            <span className="px-2 bg-white text-gray-500">Or sign up with</span>
+                        </div>
+                    </div>
+                    <div className="mt-6 flex justify-center">
+                        <GoogleLogin
+                            onSuccess={async (credentialResponse) => {
+                                try {
+                                    setLoading(true);
+                                    const res = await api.googleLogin(credentialResponse.credential);
+                                    // Login immediately after google auth
+                                    navigate("/login"); // Or directly login logic if needed, but context is better handled in login
+                                } catch (err) {
+                                    setError("Google Sign-Up Failed");
+                                } finally {
+                                    setLoading(false);
+                                }
+                            }}
+                            onError={() => setError("Google Sign-Up Failed")}
+                        />
+                    </div>
+                </div>
 
                 <div className="mt-6 text-center text-sm text-gray-600">
                     Already have an account?{" "}

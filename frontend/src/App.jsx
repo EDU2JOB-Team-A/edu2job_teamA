@@ -4,6 +4,8 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/AdminDashboard";
+import ResumeBuilder from "./pages/ResumeBuilder";
+import PredictionHistory from "./pages/PredictionHistory";
 import LandingPage from "./pages/LandingPage";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -48,6 +50,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/resume-generate"
+              element={
+                <ProtectedRoute>
+                  <ResumeBuilder />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/prediction-history"
+              element={
+                <ProtectedRoute>
+                  <PredictionHistory />
                 </ProtectedRoute>
               }
             />

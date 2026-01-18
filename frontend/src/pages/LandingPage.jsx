@@ -1,6 +1,24 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+
+const heroImages = [
+    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", // Replaced Graduation with Team Meeting
+    "https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+];
 
 function LandingPage() {
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
+        }, 4000); // Change every 4 seconds
+
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <div className="flex flex-col">
             {/* Hero Section */}
@@ -28,11 +46,17 @@ function LandingPage() {
                         </div>
                         <div className="md:w-1/2 relative">
                             <div className="bg-gradient-to-tr from-blue-100 to-purple-100 rounded-3xl p-8 transform rotate-3 shadow-2xl">
-                                <img
-                                    src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                                    alt="Students collaboration"
-                                    className="rounded-2xl shadow-lg transform -rotate-3 transition hover:rotate-0 duration-500"
-                                />
+                                <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-lg transform -rotate-3 transition hover:rotate-0 duration-500 aspect-video bg-white">
+                                    {heroImages.map((img, index) => (
+                                        <img
+                                            key={index}
+                                            src={img}
+                                            alt={`Slide ${index + 1}`}
+                                            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${index === currentImageIndex ? "opacity-100" : "opacity-0"}`}
+                                            style={{ transform: index === currentImageIndex ? 'scale(1)' : 'scale(1.05)', transition: 'opacity 1s ease-in-out, transform 4s ease-out' }}
+                                        />
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>

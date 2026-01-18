@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import RegisterView, EducationViewSet, JobHistoryViewSet, CustomTokenObtainPairView, UserViewSet
+from .views import RegisterView, EducationViewSet, JobHistoryViewSet, CustomTokenObtainPairView, UserViewSet, SkillViewSet, CertificationViewSet, ChangePasswordView, UserProfileView, PredictionView, PredictionHistoryView, PredictionDeleteView, GoogleLoginView
+from .resume_view import ResumeView
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
@@ -8,11 +9,20 @@ from rest_framework_simplejwt.views import (
 router = DefaultRouter()
 router.register(r'education', EducationViewSet, basename='education')
 router.register(r'job-history', JobHistoryViewSet, basename='job-history')
+router.register(r'skills', SkillViewSet, basename='skills')
+router.register(r'certifications', CertificationViewSet, basename='certifications')
 router.register(r'users', UserViewSet, basename='users')
 
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='auth_register'),
     path('login/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('google-login/', GoogleLoginView.as_view(), name='google_login'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('change-password/', ChangePasswordView.as_view(), name='change_password'),
+    path('generate-resume/', ResumeView.as_view(), name='generate_resume'),
+    path('predict-career/', PredictionView.as_view(), name='predict_career'),
+    path('prediction-history/', PredictionHistoryView.as_view(), name='prediction_history'),
+    path('prediction-delete/<int:pk>/', PredictionDeleteView.as_view(), name='prediction_delete'),
+    path('profile/', UserProfileView.as_view(), name='user_profile'),
     path('', include(router.urls)),
 ]

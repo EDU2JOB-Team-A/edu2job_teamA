@@ -8,7 +8,8 @@ function EducationSection() {
         degree: "",
         start_year: "",
         end_year: "",
-        grade: ""
+        grade: "",
+        cgpa: ""
     });
     const [loading, setLoading] = useState(false);
 
@@ -18,7 +19,7 @@ function EducationSection() {
 
     const fetchEducations = async () => {
         try {
-            const res = await api.get("/api/education/");
+            const res = await api.get("/education/");
             setEducations(res.data);
         } catch (error) {
             console.error(error);
@@ -32,18 +33,36 @@ function EducationSection() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+
+        const payload = { ...formData };
+        if (payload.cgpa === "") payload.cgpa = null;
+        if (payload.end_year === "") payload.end_year = null;
+        if (payload.grade === "") payload.grade = ""; // Explicitly allow empty string for CharField
+
         try {
-            await api.post("/api/education/", formData);
+            await api.post("/education/", payload);
             fetchEducations();
             setFormData({
                 institution: "",
                 degree: "",
                 start_year: "",
                 end_year: "",
-                grade: ""
+                grade: "",
+                cgpa: ""
             });
         } catch (error) {
-            alert("Failed to add education");
+            console.error("Add Education Error:", error);
+            if (error.response && error.response.data) {
+                // Format validation errors
+                const errorData = error.response.data;
+                const errorMessages = Object.keys(errorData).map(key => {
+                    const messages = Array.isArray(errorData[key]) ? errorData[key].join(", ") : errorData[key];
+                    return `${key}: ${messages}`;
+                }).join("\n");
+                alert(`Failed to add education:\n${errorMessages}`);
+            } else {
+                alert("Failed to add education. Please check your connection and try again.");
+            }
         } finally {
             setLoading(false);
         }
@@ -51,7 +70,7 @@ function EducationSection() {
 
     const handleDelete = async (id) => {
         try {
-            await api.delete(`/api/education/${id}/`);
+            await api.delete(`/education/${id}/`);
             fetchEducations();
         } catch (error) {
             alert("Failed to delete");
@@ -69,7 +88,10 @@ function EducationSection() {
                             <h3 className="font-bold text-lg">{edu.degree}</h3>
                             <p className="text-gray-600">{edu.institution}</p>
                             <p className="text-sm text-gray-500">{edu.start_year} - {edu.end_year || 'Present'}</p>
-                            {edu.grade && <p className="text-sm text-gray-500">Grade: {edu.grade}</p>}
+                            <div className="flex gap-4 mt-1">
+                                {edu.grade && <p className="text-sm text-gray-500">Grade: {edu.grade}</p>}
+                                {edu.cgpa && <p className="text-sm text-gray-500">CGPA: {edu.cgpa}</p>}
+                            </div>
                         </div>
                         <button
                             onClick={() => handleDelete(edu.id)}
@@ -126,6 +148,15 @@ function EducationSection() {
                         value={formData.grade}
                         onChange={handleChange}
                         placeholder="Grade (Optional)"
+                        className="p-2 border rounded focus:ring-2 focus:ring-primary outline-none"
+                    />
+                    <input
+                        type="number"
+                        step="0.01"
+                        name="cgpa"
+                        value={formData.cgpa}
+                        onChange={handleChange}
+                        placeholder="CGPA (Optional)"
                         className="p-2 border rounded focus:ring-2 focus:ring-primary outline-none"
                     />
                 </div>

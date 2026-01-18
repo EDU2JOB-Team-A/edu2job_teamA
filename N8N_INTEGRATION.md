@@ -1,0 +1,108 @@
+# Connecting Edu2Job to n8n (Cloud Database Guide)
+
+Since you are using a Cloud Database (Aiven) and have successfully connected the MySQL node, here is how to configure the **AI Agent**.
+
+## 1. Configure the AI Agent Node
+
+To make the AI Agent understand your database, you must give it a **System Prompt**.
+
+1.  Double-click the **AI Agent** node.
+2.  Look for **"System Prompt"** or **"Instructions"** (depending on the model).
+3.  Paste the following text. This tells the AI about your specific tables so it knows how to write the SQL.
+
+### Copy Data for System Prompt:
+
+```text
+You are a Database Engineer Assistant for Edu2Job.
+Your goal is to write EFFICIENT MySQL queries.
+
+Schema:
+1. users_user (id, username, email, role['admin', 'user'], first_name, last_name)
+2. users_education (id, user_id, institution, degree, start_year, end_year, grade)
+3. users_jobhistory (id, user_id, company, role, start_date, end_date)
+
+CRITICAL RULES:
+1. **Table Selection**: Listen carefully. "Education" -> `users_education`. "Job" -> `users_jobhistory`.
+2. **Filtering by Name**: The tables `users_education` and `users_jobhistory` ONLY have `user_id`. They do NOT have names.
+   - You MUST `JOIN` with `users_user` to filter by name.
+   - Example: `SELECT e.* FROM users_education e JOIN users_user u ON e.user_id = u.id WHERE u.username LIKE '%rajesh%' OR u.first_name LIKE '%rajesh%';`
+3. **Always Filter**: Never `SELECT *` without a WHERE clause for specific requests.
+
+Examples:
+User: "Who are the admins?"
+You: `SELECT username, email FROM users_user WHERE role = 'admin' LIMIT 5;`
+
+User: "Education for rajesh"
+You: `SELECT u.username, e.degree, e.institution FROM users_education e JOIN users_user u ON e.user_id = u.id WHERE u.username LIKE '%rajesh%' OR u.first_name LIKE '%rajesh%';`
+```
+
+## 2. Configure the "Execute SQL" Tool
+
+1.  In your screenshot, you have **"Tool Description"** set to "Set Automatically".
+    *   This is usually enough, but if the AI gets confused, change it to **"Manual"** and enter:
+    *   `Execute a MySQL query. Use this to get data from the database.`
+2.  **Query Field**:
+    *   **CRITICAL**: You must map this to the AI's output.
+    *   Click the **Gear Icon** next to the field -> **Add Expression**.
+    *   Select `Input` -> `fromAI` -> `toolInput` -> `query` (or similar, depending on your n8n version).
+    *   *Alternative*: If using the latest n8n AI Agent structure, the AI might pass the argument automatically. **Leave the Query field EMPTY**. Do not put `1` there.
+
+## 3. Testing with Chat
+
+Now, test it in the chat window:
+
+*   **User**: "List all users who have a role of 'admin'."
+*   **AI Action**: Should generate `SELECT * FROM users_user WHERE role = 'admin';`
+*   **Result**: Returns the admin details.
+
+*   **User**: "Show me the education details for user 'rajesh'."
+*   **AI Action**: Should generate a JOIN query between `users_user` and `users_education`.
+
+## 4. Critical: Configuring the "Query" Field
+
+**The Problem:**
+You typed `1` in the Query box. This forces n8n to always run the command `1`, which is not valid SQL. We want n8n to run **whatever the AI tells it to run**.
+
+**The Fix (Choose ONE method):**
+
+### Method 1: The "Clean and Simple" (Try this first)
+1.  **Delete the text**: Click inside the "Query" box and backspace until it is completely empty.
+2.  **Save and Close**: Click "Back to Canvas".
+3.  **Test the Agent**: Go to the chat window and ask "How many users?". If the AI Agent is set up correctly, it automatically fills this empty field with the SQL it generates.
+
+### Method 2: The "Manual Connection" (If Method 1 fails)
+If Method 1 doesn't work, we force the connection.
+
+1.  **Clear the field**: Delete the `1`.
+2.  **Turn on Expressions**:
+    *   Hover over the **Query** field name.
+    *   Click the **Expression** button (it looks like `x` or `{{}}` or `Fixed/Expression` toggle).
+    *   The input box should change color (usually gray).
+3.  **Enter the Code**:
+    *   In the box, copy and paste this exact text:
+        ```javascript
+        {{ $fromAI("query") }}
+        ```
+    *   This code literally means: "Get the value labeled 'query' that the AI sent."
+
+## 5. Troubleshooting Common Errors
+
+### Error: `Query was empty` (code: `ER_EMPTY_QUERY`)
+
+**STOP! Do not click standard "Execute Step" button.**
+
+*   **The Cause**: The "Query" box is empty. When you click "Execute Step", n8n tries to run "nothing", so it gives an error.
+*   **The Solution**: This node is a **Tool** for the AI. It waits for the AI to give it code. It cannot run by itself.
+    1.  **Close** the MySQL node settings (Back to Canvas).
+    2.  Click the **Chat** button (bottom of the screen).
+    3.  Type: `"How many users are there?"` and send.
+    4.  The AI will **automatically fill** that empty box with `SELECT count(*) FROM users_user;` and run it for you.
+
+### Error: `sql: undefined`
+*   **Cause**: Similar to above. You are likely testing manually.
+*   **Solution**: Test via the Chat window only.
+
+### Error: `Connection refused`
+*   **Cause**: n8n cannot reach your database.
+*   **Solution**: Check your Host setting. If using Docker, use `host.docker.internal`. If Cloud, check your public IP/ngrok.
+
