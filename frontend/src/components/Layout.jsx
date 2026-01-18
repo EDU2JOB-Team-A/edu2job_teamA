@@ -24,15 +24,18 @@ function Layout({ children }) {
                         {user ? (
                             <>
                                 <Link to="/dashboard" className="text-gray-600 hover:text-primary transition font-medium">Dashboard</Link>
+                                <Link to="/about" className="text-gray-600 hover:text-primary transition font-medium">About</Link>
                                 <Link to="/profile" className="text-gray-600 hover:text-primary transition font-medium">Profile</Link>
                                 {user.role === 'admin' && (
                                     <Link to="/admin" className="text-purple-600 hover:text-purple-700 transition font-medium">Admin Panel</Link>
                                 )}
                             </>
                         ) : (
-                            <a href="#features" className="text-gray-600 hover:text-primary transition font-medium">Features</a>
+                            <>
+                                <a href="#features" className="text-gray-600 hover:text-primary transition font-medium">Features</a>
+                                <a href="#about" className="text-gray-600 hover:text-primary transition font-medium">About</a>
+                            </>
                         )}
-                        <a href="#about" className="text-gray-600 hover:text-primary transition font-medium">About</a>
                     </nav>
 
                     <div className="flex items-center gap-4">
