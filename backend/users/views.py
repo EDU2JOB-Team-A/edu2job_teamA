@@ -344,13 +344,19 @@ class TrainingDataView(APIView):
             
             import pandas as pd
             df = pd.read_csv(temp_path)
-            if 'Skills' not in df.columns or 'Job_Role' not in df.columns:
+            # Normalize headers to lowercase
+            df.columns = [c.lower() for c in df.columns]
+            
+            if 'skills' not in df.columns or 'job_role' not in df.columns:
                 os.remove(temp_path)
-                return Response({'error': "Invalid CSV format. Required columns: 'Skills', 'Job_Role'"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'error': "Invalid CSV format. Required columns: 'skills', 'job_role'"}, status=status.HTTP_400_BAD_REQUEST)
             
             if len(df) < 5:
                 os.remove(temp_path)
                 return Response({'error': "Dataset too small. Please provide at least 5 records."}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Save normalized dataframe back to temp_path to ensure headers are lowercase for Predictor
+            df.to_csv(temp_path, index=False)
 
              # If valid, replace old file
             if os.path.exists(final_path):

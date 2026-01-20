@@ -19,6 +19,9 @@ class CareerPredictor:
             return
 
         self.df = pd.read_csv(csv_path)
+        # Normalize skills in dataframe to lowercase to ensure consistency
+        if 'skills' in self.df.columns:
+            self.df['skills'] = self.df['skills'].astype(str).str.lower()
         
         # Validation
         val_df = self.df.copy()
@@ -30,7 +33,7 @@ class CareerPredictor:
         # Handle NaN
         val_df = val_df.dropna(subset=['skills', 'job_role'])
         
-        X_raw = [str(skills).split(',') for skills in val_df['skills']]
+        X_raw = [str(skills).lower().split(',') for skills in val_df['skills']]
         y = val_df['job_role']
 
         # Determine all possible skills from dataset
@@ -53,7 +56,7 @@ class CareerPredictor:
         # But MLB is easier if we handle ignore.
         
         # Let's clean user skills
-        user_skills_clean = [s.strip() for s in user_skills]
+        user_skills_clean = [s.strip().lower() for s in user_skills]
         
         # MLB.set_params might not set unknown ignore.
         # Safe way: Only keep skills known to MLB
