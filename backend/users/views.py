@@ -210,23 +210,32 @@ class GoogleLoginView(APIView):
                 return Response({'error': 'Email not verified by Google'}, status=status.HTTP_400_BAD_REQUEST)
 
             # Get or Create User
-            try:
-                user = User.objects.get(username=email)
-            except User.DoesNotExist:
+            user = User.objects.filter(email=email).first()
+            if not user:
                 # Create user with random password
-                user = User.objects.create_user(username=email, email=email, password=None)
+                # Handle potential username collision by appending random string if needed, 
+                # but for now assuming email as username is desired pattern.
+                if User.objects.filter(username=email).exists():
+                     # Fallback if username taken but email not associated (rare)
+                     import uuid
+                     user = User.objects.create_user(username=f"{email}_{uuid.uuid4().hex[:8]}", email=email, password=None)
+                else:
+                     user = User.objects.create_user(username=email, email=email, password=None)
+                
                 user.first_name = name or ""
                 user.save()
             
-            # Generate Tokens
-            refresh = RefreshToken.for_user(user)
+            # Generate Tokens using CustomTokenObtainPairSerializer to ensure claims like 'role' are present
+            token = CustomTokenObtainPairSerializer.get_token(user)
+
             return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
+                'refresh': str(token),
+                'access': str(token.access_token),
                 'user': {
                     'username': user.username,
                     'email': user.email,
-                    'first_name': user.first_name
+                    'first_name': user.first_name,
+                    'role': user.role
                 }
             })
 

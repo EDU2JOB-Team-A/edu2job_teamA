@@ -101,7 +101,7 @@ function Login() {
                             onSuccess={async (credentialResponse) => {
                                 try {
                                     setLoading(true);
-                                    const res = await api.googleLogin(credentialResponse.credential);
+                                    const res = await googleLogin(credentialResponse.credential);
                                     const accessToken = res.data.access;
                                     login(accessToken, res.data.refresh);
                                     const decoded = jwtDecode(accessToken);
@@ -112,7 +112,9 @@ function Login() {
                                     setLoading(false);
                                 }
                             }}
-                            onError={() => setError("Google Login Failed")}
+                            onError={() => {
+                                setError("Google Login Failed");
+                            }}
                         />
                     </div>
                 </div>

@@ -7,7 +7,7 @@ import ErrorBoundary from './components/ErrorBoundary.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <GoogleOAuthProvider clientId="621797805307-m1rlscido5dt2brdgnjmub64dmkqbh96.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="728667203177-j0qu7iq6onu2v469sqndeuhro2bdgake.apps.googleusercontent.com">
       <ErrorBoundary>
         <App />
       </ErrorBoundary>

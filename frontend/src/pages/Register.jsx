@@ -1,4 +1,5 @@
 import { useState, useContext } from "react";
+import { jwtDecode } from "jwt-decode";
 import api from "../api";
 import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate, Link } from "react-router-dom";
@@ -15,6 +16,7 @@ function Register() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -155,9 +157,13 @@ function Register() {
                             onSuccess={async (credentialResponse) => {
                                 try {
                                     setLoading(true);
-                                    const res = await api.googleLogin(credentialResponse.credential);
-                                    // Login immediately after google auth
-                                    navigate("/login"); // Or directly login logic if needed, but context is better handled in login
+                                    const res = await googleLogin(credentialResponse.credential);
+                                    const accessToken = res.data.access;
+                                    login(accessToken, res.data.refresh);
+
+                                    // Decode token to get role
+                                    const decoded = jwtDecode(accessToken);
+                                    navigate(decoded.role === "admin" ? "/admin" : "/dashboard");
                                 } catch (err) {
                                     setError("Google Sign-Up Failed");
                                 } finally {
