@@ -79,6 +79,15 @@
     npm run dev
     ```
 
+## 👤 Individual Contribution (Academic Record)
+
+
+
+**Contribution Summary:**
+- Reviewed overall project structure and documentation
+- Improved README clarity for setup and collaboration workflow
+- Verified backend–frontend integration instructions
+- Ensured academic-friendly documentation for evaluation
 ### Creating an Admin User
 Run the included script to create an admin user:
 ```bash
